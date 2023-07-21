@@ -2,7 +2,12 @@ const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [
+	Intents.FLAGS.GUILDS, 
+	Intents.FLAGS.GUILD_MESSAGES,
+	Intents.FLAGS.MESSAGE_CONTENT,
+	Intents.FLAGS.GUILD_MEMBERS
+] });
 
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -24,10 +29,13 @@ client.once('ready', () => {
 
 client.on('messageCreate', async message => {
 
-	const keywords = ['kitten', 'kitty', 'cat', 'meow', 'penis', 'uwu'];
+	const keywords = ['kitten', 'kitty', 'cat', 'meow', 'penis', 'uwu', 'nya'];
 	// could add nya to keywords, but i have to do an author check
 
 	let foundInText = false;
+
+	if(message.author.id===client.user.id) return;
+
 	for (const i in keywords) {
 		if (message.content.toLowerCase().includes(keywords[i].toLowerCase())) foundInText = true;
 	}
